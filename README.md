@@ -222,7 +222,7 @@ The hackathon spec asked for WhatsApp link saving, AI categorization and summari
 - RAG question answering over saved content via WhatsApp (`ask:` command)
 - Save streak tracking with current streak, best streak, and weekly count
 - Collections / folder system for organizing saves
-- Daily dose scheduler — sends a forgotten save at 8 AM via a background thread
+
 - Weekly digest with top categories delivered over WhatsApp
 - GitHub-style activity heatmap on the stats page (last 365 days)
 - CSV export of all saved content
