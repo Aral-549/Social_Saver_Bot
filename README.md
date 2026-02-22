@@ -222,7 +222,7 @@ The hackathon spec asked for WhatsApp link saving, AI categorization and summari
 - RAG question answering over saved content via WhatsApp (`ask:` command)
 - Save streak tracking with current streak, best streak, and weekly count
 - Collections / folder system for organizing saves
-
+- Daily dose scheduler — sends a forgotten save at 8 AM via a background thread
 - Weekly digest with top categories delivered over WhatsApp
 - GitHub-style activity heatmap on the stats page (last 365 days)
 - CSV export of all saved content
@@ -241,10 +241,24 @@ The RAG implementation deliberately avoids vector embeddings. For a personal boo
 
 ---
 
+## Demo
+
+Watch the full demo walkthrough on YouTube: [https://youtu.be/i4z8_0sqVwY]
+
+---
+
+## Team
+
+|     Name          |               Email                   |
+|-------------------|---------------------------------------|
+| Shaik  Arshad Ali | shaik2.mitmpl2025@learner.manipal.edu |
+
+---
+
 ## License
 
 MIT
 
 ---
 
-Built For Hack the Thread — National Institute of Technology Karnataka (NITK), Surathkal.
+Built at Hack the Thread — National Institute of Technology Karnataka (NITK), Surathkal.
