@@ -247,4 +247,4 @@ MIT
 
 ---
 
-Built at Hack the Thread — National Institute of Technology Karnataka (NITK), Surathkal.
+Built For Hack the Thread — National Institute of Technology Karnataka (NITK), Surathkal.
