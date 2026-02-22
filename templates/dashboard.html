@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Saver — Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --primary:#3b82f6;--primary-light:#fb7185;
+            --primary-dark:#be123c;--secondary:#10b981;
+            --dark:#0a0a0a;--card:#171717;
+            --border:#262626;--text:#fafafa;--text-muted:#a3a3a3;
+        }
+        body{font-family:'DM Sans',system-ui,-apple-system,sans-serif;background:var(--dark);color:var(--text);line-height:1.6;min-height:100vh}
+        
+        /* Navbar */
+        .navbar{background:var(--card);padding:1.25rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+        .navbar-brand{display:flex;align-items:center;gap:.75rem;font-size:1.5rem;font-weight:800;font-family:'Syne',sans-serif;text-decoration:none;color:var(--text)}
+        .navbar-brand span{color:var(--primary)}
+        .navbar-nav{display:flex;gap:2rem;list-style:none}
+        .navbar-nav a{color:var(--text-muted);text-decoration:none;transition:color .3s;font-weight:500;font-size:.95rem}
+        .navbar-nav a:hover,.navbar-nav a.active{color:var(--primary)}
+        
+        /* Container */
+        .container{max-width:1400px;margin:0 auto;padding:2.5rem}
+        
+        /* Hero */
+        .hero{margin-bottom:2.5rem}
+        .hero h1{font-size:3rem;font-weight:800;font-family:'Syne',sans-serif;margin-bottom:.5rem}
+        .hero h1 em{color:var(--primary);font-style:normal}
+        .hero p{color:var(--text-muted);font-size:1.15rem}
+        
+        /* Stats */
+        .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem;margin-bottom:2.5rem}
+        .stat{background:var(--card);border-radius:14px;padding:1.5rem;border:1px solid var(--border);transition:all .3s}
+        .stat:hover{transform:translateY(-3px);border-color:var(--primary)}
+        .stat-num{font-size:2.5rem;font-weight:800;font-family:'Syne',sans-serif;margin-bottom:.25rem}
+        .stat-num.total{color:var(--primary)}
+        .stat-num.week{color:var(--secondary)}
+        .stat-num.cat{color:#f59e0b}
+        .stat-num.users{color:#8b5cf6}
+        .stat-lbl{color:var(--text-muted);font-size:.95rem}
+        
+        /* Save Box */
+        .save-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.75rem;margin-bottom:2.5rem}
+        .save-label{color:var(--text-muted);font-size:.9rem;margin-bottom:.75rem;display:block;font-weight:500}
+        .save-row{display:flex;gap:1rem}
+        .save-inp{flex:1;background:var(--dark);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.5rem;color:var(--text);font-size:1rem;font-family:inherit}
+        .save-inp:focus{outline:none;border-color:var(--primary)}
+        .save-inp::placeholder{color:var(--text-muted)}
+        .save-btn{background:var(--primary);color:#fff;border:none;border-radius:10px;padding:1.1rem 2rem;font-size:1rem;font-weight:700;cursor:pointer;transition:all .3s;font-family:inherit}
+        .save-btn:hover{background:var(--primary-dark)}
+        
+        /* Filters */
+        .filters{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;margin-bottom:2rem}
+        .search{position:relative;flex:1;min-width:260px}
+        .search input{width:100%;padding:1rem 1rem 1rem 3rem;background:var(--card);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:1rem;font-family:inherit}
+        .search i{position:absolute;left:1.1rem;top:50%;transform:translateY(-50%);color:var(--text-muted)}
+        .select{padding:1rem 1.25rem;background:var(--card);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:1rem;cursor:pointer;font-family:inherit}
+        .select:focus{outline:none;border-color:var(--primary)}
+        .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.85rem 1.5rem;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;transition:all .3s;text-decoration:none;font-family:inherit}
+        .btn-primary{background:var(--primary);color:#fff}
+        .btn-primary:hover{background:var(--primary-dark)}
+        .btn-secondary{background:var(--card);color:var(--text);border:1px solid var(--border)}
+        .btn-secondary:hover{border-color:var(--primary)}
+        
+        /* Grid */
+        .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem}
+        
+        /* Card */
+        .card{background:var(--card);border-radius:14px;overflow:hidden;border:1px solid var(--border);transition:all .3s;text-decoration:none;color:inherit;display:flex;flex-direction:column}
+        .card:hover{transform:translateY(-5px);border-color:var(--primary);box-shadow:0 15px40px rgba(0,0,0,.4)}
+        
+        /* Card Image */
+        .card-media{position:relative;overflow:hidden}
+        .card-img{width:100%;height:220px;object-fit:cover;transition:transform .5s;display:block}
+        .card:hover .card-img{transform:scale(1.08)}
+        
+        /* Platform Placeholders */
+        .card-placeholder{width:100%;height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.75rem;font-size:3rem;color:#fff}
+        .card-placeholder.youtube{background:linear-gradient(135deg,#dc2626,#991b1b)}
+        .card-placeholder.instagram{background:linear-gradient(135deg,#f59e0b,#ec4899,#8b5cf6)}
+        .card-placeholder.twitter{background:linear-gradient(135deg,#171717,#27272a)}
+        .card-placeholder.tiktok{background:linear-gradient(135deg,#010101,#ff0050,#00f2ea)}
+        .card-placeholder.facebook{background:linear-gradient(135deg,#1877f2,#0d65d9)}
+        .card-placeholder.linkedin{background:linear-gradient(135deg,#0077b5,#005885)}
+        .card-placeholder.reddit{background:linear-gradient(135deg,#ff4500,#ff6b3d)}
+        .card-placeholder.pinterest{background:linear-gradient(135deg,#e60023,#ff4757)}
+        .card-placeholder.blog{background:linear-gradient(135deg,#10b981,#34d399)}
+        
+        .card-placeholder span{font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;opacity:.85}
+        
+        .badge{position:absolute;bottom:.75rem;left:.75rem;display:inline-flex;padding:.35rem .85rem;border-radius:50px;font-size:.75rem;font-weight:700;text-transform:uppercase;background:rgba(0,0,0,.8);color:#fff;border:1px solid rgba(255,255,255,.1)}
+        
+        /* Card Body */
+        .card-body{padding:1.5rem;flex:1;display:flex;flex-direction:column}
+        .card-title{font-size:1.15rem;font-weight:700;margin-bottom:.5rem;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-family:'Syne',sans-serif}
+        .card-title a{color:var(--text);text-decoration:none}
+        .card-title a:hover{color:var(--primary)}
+        .card-caption{color:var(--text-muted);font-size:.95rem;margin-bottom:1rem;line-height:1.5;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+        
+        .card-category{display:inline-block;padding:.35rem .9rem;background:var(--dark);border-radius:50px;font-size:.8rem;color:var(--secondary);margin-bottom:.75rem;border:1px solid var(--border)}
+        
+        .card-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem}
+        .card-tag{padding:.25rem .6rem;background:rgba(99,102,241,.1);border-radius:6px;font-size:.75rem;color:var(--text-muted)}
+        
+        .card-footer{display:flex;justify-content:space-between;align-items:center;padding-top:1rem;border-top:1px solid var(--border);font-size:.85rem;color:var(--text-muted)}
+        
+        .card-actions{display:flex;gap:.25rem}
+        .card-btn{background:none;border:none;color:var(--text-muted);cursor:pointer;padding:.5rem;border-radius:6px;transition:all .2s;font-size:.9rem}
+        .card-btn:hover{color:var(--primary);background:rgba(225,29,72,.1)}
+        .card-btn.delete:hover{color:#ef4444;background:rgba(239,68,68,.1)}
+        
+        /* Copy & Edit buttons */
+        .btn-copy { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); color: #3b82f6; }
+        .btn-copy:hover { background: rgba(59,130,246,0.25); }
+        .btn-edit { background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.2); color: #8b5cf6; }
+        .btn-edit:hover { background: rgba(139,92,246,0.25); }
+        
+        /* Export Button */
+        .btn-export { background: var(--card); padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--border); color: var(--text-muted); text-decoration: none; transition: all 0.3s; font-size: 0.9rem; }
+        .btn-export:hover { border-color: var(--primary); color: var(--primary); }
+        
+        /* Collections */
+        .collections-bar { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-bottom: 1.75rem; padding: 1rem 1.25rem; background: var(--card); border: 1px solid var(--border); border-radius: 12px; }
+        .col-chip-wrap { display: inline-flex; align-items: center; gap: .2rem; }
+        .col-chip { display: inline-flex; align-items: center; gap: .35rem; padding: .38rem .85rem; border-radius: 20px; background: var(--dark); border: 1px solid var(--border); color: var(--text-muted); font-size: .8rem; font-weight: 600; text-decoration: none; transition: all .2s; white-space: nowrap; }
+        .col-chip:hover, .col-chip.active { background: rgba(59,130,246,.12); border-color: #3b82f6; color: #3b82f6; }
+        .col-delete-btn { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.2); color: #ef4444; border-radius: 50%; width: 18px; height: 18px; font-size: .75rem; cursor: pointer; line-height: 1; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+        .col-input { background: var(--dark); border: 1px solid var(--border); border-radius: 8px; padding: .38rem .85rem; color: var(--text); font-size: .8rem; width: 140px; outline: none; transition: border-color .2s; }
+        .col-input:focus { border-color: #3b82f6; }
+        .col-add-btn { background: #3b82f6; color: #fff; border: none; border-radius: 8px; padding: .38rem .85rem; font-size: .8rem; font-weight: 700; cursor: pointer; white-space: nowrap; transition: background .2s; }
+        .col-add-btn:hover { background: #2563eb; }
+        .col-assign-wrap { margin-top: .5rem; }
+        .col-select { background: var(--dark); border: 1px solid var(--border); border-radius: 6px; padding: .3rem .55rem; color: var(--text-muted); font-size: .75rem; cursor: pointer; width: 100%; outline: none; transition: border-color .2s; }
+        .col-select:hover { border-color: rgba(255,255,255,.2); }
+        
+        /* Empty */
+        .empty{text-align:center;padding:5rem 2rem}
+        .empty-icon{width:90px;height:90px;margin:0 auto 1.5rem;background:var(--card);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.25rem;color:var(--primary);border:1px solid var(--border)}
+        .empty h2{font-size:1.75rem;margin-bottom:.5rem;font-family:'Syne',sans-serif}
+        .empty p{color:var(--text-muted);font-size:1.05rem}
+        
+        /* Pagination */
+        .pagination{display:flex;justify-content:center;gap:.5rem;margin-top:2.5rem;flex-wrap:wrap}
+        .pagination a,.pagination span{padding:.6rem 1rem;border-radius:8px;border:1px solid var(--border);color:var(--text-muted);text-decoration:none;transition:all .2s;font-size:.95rem}
+        .pagination a:hover{border-color:var(--primary);color:var(--primary)}
+        .pagination .current{background:var(--primary);border-color:var(--primary);color:#fff}
+        
+        /* Modal */
+        .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;align-items:center;justify-content:center}
+        .modal.active{display:flex}
+        .modal-content{background:var(--card);border-radius:18px;padding:2rem;width:90%;max-width:520px;border:1px solid var(--border)}
+        .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+        .modal-header h2{font-size:1.35rem;font-family:'Syne',sans-serif}
+        .modal-close{background:none;border:none;color:var(--text-muted);font-size:1.75rem;cursor:pointer;padding:.25rem}
+        .form-group{margin-bottom:1.1rem}
+        .form-group label{display:block;font-size:.85rem;color:var(--text-muted);margin-bottom:.5rem;font-weight:500}
+        .form-group input,.form-group textarea,.form-group select{width:100%;padding:.85rem;background:var(--dark);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:1rem;font-family:inherit}
+        .form-group textarea{resize:vertical;min-height:110px}
+        .form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--primary)}
+        
+        /* Toast */
+        .toast{position:fixed;top:1.5rem;right:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.75rem;display:flex;align-items:center;gap:.75rem;z-index:300;animation:slideIn .3s ease;font-weight:500}
+        .toast.success{border-left:4px solid var(--secondary)}
+        .toast.error{border-left:4px solid #ef4444}
+        @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('dashboard') }}" class="navbar-brand"><i class="fas fa-bookmark"></i> Social<span>Saver</span></a>
+        <ul class="navbar-nav">
+            <li><a href="{{ url_for('dashboard') }}" class="active">Dashboard</a></li>
+            <li><a href="{{ url_for('discover') }}">Discover</a></li>
+            <li><a href="{{ url_for('stats_page') }}">Stats</a></li>
+            <li><a href="/collections"><i class="fas fa-folder"></i> Collections</a></li>
+            <li><a href="/export/csv" class="btn-export"><i class="fas fa-download"></i> Export</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Your <em>saved</em> content</h1>
+            <p>Everything you've bookmarked — organised, searchable, rediscoverable</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-num total">{{ stats.total }}</div>
+                <div class="stat-lbl">Total Saved</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num week">{{ stats.recent_7_days }}</div>
+                <div class="stat-lbl">This Week</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num cat">{{ stats.by_category|length }}</div>
+                <div class="stat-lbl">Categories</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num users">{{ stats.unique_users }}</div>
+                <div class="stat-lbl">WhatsApp Users</div>
+            </div>
+        </div>
+
+        <div class="save-box">
+            <span class="save-label"><i class="fas fa-plus-circle"></i> Save new content</span>
+            <div class="save-row">
+                <input type="url" id="contentUrl" class="save-inp" placeholder="Paste any URL — Instagram, YouTube, Twitter, article…">
+                <button onclick="saveUrl()" class="save-btn"><i class="fas fa-bookmark"></i> Save</button>
+            </div>
+        </div>
+
+        <form method="GET" action="{{ url_for('dashboard') }}" class="filters">
+            <div class="search"><i class="fas fa-search"></i><input type="text" name="q" placeholder="Search saved content…" value="{{ search_query or '' }}"></div>
+            <select name="platform" class="select">
+                <option value="">All platforms</option>
+                {% for p in platforms %}
+                <option value="{{ p }}" {% if selected_platform==p %}selected{% endif %}>{{ p|title }}</option>
+                {% endfor %}
+            </select>
+            <select name="category" class="select">
+                <option value="">All categories</option>
+                {% for c in categories %}
+                <option value="{{ c }}" {% if selected_category==c %}selected{% endif %}>{{ c }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
+            {% if selected_platform or selected_category or search_query %}
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary"><i class="fas fa-times"></i> Clear</a>
+            {% endif %}
+        </form>
+
+        <!-- Collections Bar -->
+        <div class="collections-bar">
+            <a href="{{ url_for('dashboard') }}" class="col-chip {% if not selected_collection %}active{% endif %}">
+                <i class="fas fa-th-large"></i> All
+            </a>
+            {% for col in collections %}
+            <div class="col-chip-wrap">
+                <a href="{{ url_for('collections_page', collection=col) }}" class="col-chip {% if selected_collection==col %}active{% endif %}">
+                    <i class="fas fa-folder"></i> {{ col }}
+                </a>
+                <form method="POST" action="{{ url_for('delete_collection_route') }}" style="display:inline">
+                    <input type="hidden" name="name" value="{{ col }}">
+                    <button type="submit" class="col-delete-btn" title="Delete folder" onclick="return confirm('Delete folder \"{{ col }}\"? Items will not be deleted.')">×</button>
+                </form>
+            </div>
+            {% endfor %}
+
+            <!-- Always visible create form -->
+            <form method="POST" action="{{ url_for('create_collection_route') }}" style="display:inline-flex; gap:.35rem; align-items:center">
+                <input name="name" placeholder="Create a folder..." class="col-input" maxlength="40" style="padding:.35rem .6rem; border-radius:6px; border:1px solid var(--border); background:var(--dark); color:var(--text); font-size:.8rem; width:140px;">
+                <button type="submit" class="col-add-btn" style="padding:.35rem .7rem; border-radius:6px; border:none; background:var(--primary); color:#fff; font-size:.75rem; cursor:pointer; font-weight:600;">+ Add</button>
+            </form>
+
+            {% if not collections %}
+            <span style="color: var(--text-muted); font-size: .8rem; margin-left: .5rem;">
+                No folders yet — create one above!
+            </span>
+            {% endif %}
+        </div>
+
+        {% if content %}
+        <div class="grid">
+            {% for item in content %}
+            <a href="{{ url_for('content_detail', content_id=item.id) }}" class="card" id="card-{{ item.id }}">
+                <div class="card-media">
+                    {% if item.image_url %}
+                    <img src="{{ item.image_url }}" alt="{{ item.title }}" class="card-img" onload="checkImg(this)" onerror="swapPh(this)">
+                    {% endif %}
+                    <div class="card-placeholder {{ item.platform }}" {% if item.image_url %}style="display:none"{% endif %}>
+                        {% if item.platform == 'youtube' %}
+                            <i class="fab fa-youtube"></i>
+                            <span>YouTube</span>
+                        {% elif item.platform == 'instagram' %}
+                            <i class="fab fa-instagram"></i>
+                            <span>Instagram</span>
+                        {% elif item.platform == 'twitter' %}
+                            <i class="fab fa-twitter"></i>
+                            <span>Twitter</span>
+                        {% elif item.platform == 'tiktok' %}
+                            <i class="fab fa-tiktok"></i>
+                            <span>TikTok</span>
+                        {% elif item.platform == 'facebook' %}
+                            <i class="fab fa-facebook"></i>
+                            <span>Facebook</span>
+                        {% elif item.platform == 'linkedin' %}
+                            <i class="fab fa-linkedin"></i>
+                            <span>LinkedIn</span>
+                        {% elif item.platform == 'reddit' %}
+                            <i class="fab fa-reddit"></i>
+                            <span>Reddit</span>
+                        {% elif item.platform == 'pinterest' %}
+                            <i class="fab fa-pinterest"></i>
+                            <span>Pinterest</span>
+                        {% else %}
+                            <i class="fas fa-globe"></i>
+                            <span>Web</span>
+                        {% endif %}
+                    </div>
+                    <span class="badge"><i class="fas fa-{{ item.platform }}"></i> {{ item.platform }}</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">{{ item.title or 'Untitled' }}</div>
+                    <p class="card-caption">{{ item.summary or item.caption or 'No description' }}</p>
+                    {% if item.category %}<span class="card-category">{{ item.category }}</span>{% endif %}
+                    {% if item.tags %}
+                    <div class="card-tags">
+                        {% for tag in item.tags.split(',')[:3] %}
+                        <span class="card-tag">{{ tag.strip() }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="card-footer">
+                        <span><i class="far fa-clock"></i> {{ item.timestamp[:10] }}</span>
+                        <div class="card-actions">
+                            <button class="card-btn btn-copy" onclick="event.preventDefault();event.stopPropagation();copyLink('{{ item.url }}', this)" title="Copy link"><i class="fas fa-link"></i></button>
+                            <button class="card-btn" onclick="event.preventDefault();event.stopPropagation();regenerateAI({{ item.id }})" title="Re-run AI"><i class="fas fa-magic"></i></button>
+                            <button class="card-btn btn-edit" onclick="event.preventDefault();event.stopPropagation();editContent({{ item.id }})" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="card-btn delete" onclick="event.preventDefault();event.stopPropagation();deleteContent({{ item.id }})" title="Delete"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+        {% if total_pages > 1 %}
+        <div class="pagination">
+            {% if current_page > 1 %}
+            <a href="?page={{ current_page-1 }}&platform={{ selected_platform }}&category={{ selected_category }}&q={{ search_query }}"><i class="fas fa-chevron-left"></i></a>
+            {% endif %}
+            {% for p in range(1, total_pages+1) %}
+                {% if p == current_page %}
+                <span class="current">{{ p }}</span>
+                {% elif p<=3 or p>=total_pages-2 or (p>=current_page-1 and p<=current_page+1) %}
+                <a href="?page={{ p }}&platform={{ selected_platform }}&category={{ selected_category }}&q={{ search_query }}">{{ p }}</a>
+                {% elif p==4 or p==total_pages-3 %}
+                <span>…</span>
+                {% endif %}
+            {% endfor %}
+            {% if current_page < total_pages %}
+            <a href="?page={{ current_page+1 }}&platform={{ selected_platform }}&category={{ selected_category }}&q={{ search_query }}"><i class="fas fa-chevron-right"></i></a>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% else %}
+        <div class="empty">
+            <div class="empty-icon"><i class="fas fa-inbox"></i></div>
+            <h2>Nothing saved yet</h2>
+            <p>Paste a URL above or send a link on WhatsApp to get started</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-edit"></i> Edit Content</h2>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <form id="editForm">
+                <input type="hidden" id="editId">
+                <div class="form-group"><label>Title</label><input type="text" id="editTitle"></div>
+                <div class="form-group"><label>Description</label><textarea id="editCaption"></textarea></div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="editCategory">
+                        {% for c in ['Artificial Intelligence','Machine Learning','Programming & Coding','Web Development','Cybersecurity','Data Science','Entrepreneurship','Startups & Funding','Marketing & Growth','Personal Finance','Stock Market & Investing','Fitness & Workouts','Nutrition & Diet','Mental Health & Mindfulness','Recipes & Cooking','Baking & Desserts','Travel Destinations','Budget Travel & Backpacking','Photography','Gaming & Esports','Movies & Cinemas','Music & Artists','Motivation & Self-Help','Career Development','Blockchain & Crypto','Other'] %}
+                        <option value="{{ c }}">{{ c }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group"><label>Tags (comma-separated)</label><input type="text" id="editTags" placeholder="tag1, tag2, tag3"></div>
+                <button type="submit" class="btn btn-primary" style="width:100%"><i class="fas fa-save"></i> Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+function checkImg(img) {
+    setTimeout(() => { if (img.naturalWidth <= 120 && img.naturalHeight <= 90) swapPh(img); }, 50);
+}
+function swapPh(img) {
+    img.style.display = 'none';
+    const p = img.nextElementSibling;
+    if (p && p.classList.contains('card-placeholder')) p.style.display = 'flex';
+}
+
+function toast(msg, type='success') {
+    const el = document.createElement('div');
+    el.className = `toast ${type}`;
+    el.innerHTML = `<i class="fas fa-${type==='success'?'check':'exclamation'}"></i> ${msg}`;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3500);
+}
+
+function copyLink(url, btn) {
+    navigator.clipboard.writeText(url).then(() => {
+        const icon = btn.querySelector('i');
+        icon.className = 'fas fa-check';
+        btn.style.color = '#10b981';
+        setTimeout(() => {
+            icon.className = 'fas fa-link';
+            btn.style.color = '';
+        }, 1800);
+    });
+}
+
+async function saveUrl() {
+    const url = document.getElementById('contentUrl').value.trim();
+    if (!url) { toast('Please enter a URL', 'error'); return; }
+    toast('Saving content…');
+    try {
+        const res = await fetch('/api/content', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({url}) });
+        const d = await res.json();
+        if (d.success) { toast('Saved successfully!'); setTimeout(() => location.reload(), 700); }
+        else toast(d.error || 'Failed to save', 'error');
+    } catch(e) { toast('Network error', 'error'); }
+}
+document.getElementById('contentUrl').addEventListener('keydown', e => { if (e.key==='Enter') saveUrl(); });
+
+async function deleteContent(id) {
+    if (!confirm('Delete this item?')) return;
+    const res = await fetch(`/api/content/${id}`, {method:'DELETE'});
+    const d = await res.json();
+    if (d.success) { document.getElementById(`card-${id}`)?.remove(); toast('Deleted'); }
+    else toast('Delete failed', 'error');
+}
+
+async function regenerateAI(id) {
+    toast('Regenerating AI…');
+    const res = await fetch(`/api/content/${id}/regenerate`, {method:'POST'});
+    const d = await res.json();
+    if (d.success) { toast('AI updated!'); setTimeout(() => location.reload(), 600); }
+    else toast('Regeneration failed', 'error');
+}
+
+async function editContent(id) {
+    const res = await fetch(`/api/content/${id}`);
+    const d = (await res.json()).data;
+    if (!d) return;
+    document.getElementById('editId').value = d.id;
+    document.getElementById('editTitle').value = d.title || '';
+    document.getElementById('editCaption').value = d.caption || '';
+    document.getElementById('editCategory').value = d.category || '';
+    document.getElementById('editTags').value = d.tags || '';
+    document.getElementById('editModal').classList.add('active');
+}
+function closeModal() { document.getElementById('editModal').classList.remove('active'); }
+document.getElementById('editModal').addEventListener('click', e => { if (e.target===document.getElementById('editModal')) closeModal(); });
+
+document.getElementById('editForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const id = document.getElementById('editId').value;
+    const body = { title: document.getElementById('editTitle').value, caption: document.getElementById('editCaption').value, category: document.getElementById('editCategory').value, tags: document.getElementById('editTags').value };
+    const res = await fetch(`/api/content/${id}`, {method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+    const d = await res.json();
+    if (d.success) { toast('Saved!'); closeModal(); setTimeout(() => location.reload(), 500); }
+    else toast('Save failed', 'error');
+});
+    </script>
+</body>
+</html>

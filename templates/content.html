@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ content.title or 'Content Detail' }} - Social Saver Bot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --primary:#3b82f6;--primary-light:#60a5fa;
+            --primary-dark:#be123c;--secondary:#10b981;
+            --dark:#0a0a0a;--card:#171717;
+            --border:#262626;--text:#fafafa;--text-muted:#a3a3a3;
+        }
+        body{font-family:'DM Sans',system-ui,-apple-system,sans-serif;background:var(--dark);color:var(--text);line-height:1.6;min-height:100vh}
+        
+        /* Navbar */
+        .navbar{background:var(--card);padding:1.25rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+        .navbar-brand{display:flex;align-items:center;gap:.75rem;font-size:1.5rem;font-weight:800;font-family:'Syne',sans-serif;text-decoration:none;color:var(--text)}
+        .navbar-brand span{color:var(--primary)}
+        .navbar-nav{display:flex;gap:2rem;list-style:none}
+        .navbar-nav a{color:var(--text-muted);text-decoration:none;transition:color .3s;font-weight:500;font-size:.95rem}
+        .navbar-nav a:hover,.navbar-nav a.active{color:var(--primary)}
+        
+        /* Container */
+        .container{max-width:900px;margin:0 auto;padding:2.5rem}
+        
+        /* Back */
+        .back-link{display:inline-flex;align-items:center;gap:.5rem;color:var(--text-muted);text-decoration:none;margin-bottom:1.5rem;font-size:.95rem}
+        .back-link:hover{color:var(--primary)}
+        
+        /* Card */
+        .card{background:var(--card);border-radius:16px;overflow:hidden;border:1px solid var(--border)}
+        
+        /* Media */
+        .card-media{position:relative;width:100%;background:var(--dark)}
+        .card-img{width:100%;max-height:500px;object-fit:contain;display:block}
+        .card-placeholder{width:100%;height:300px;background:linear-gradient(135deg,var(--primary),#f43f5e);display:flex;align-items:center;justify-content:center;font-size:5rem;color:#fff}
+        
+        /* Platform Banner */
+        .platform-banner{width:100%;padding:2.5rem;text-align:center}
+        .platform-banner.youtube{background:linear-gradient(135deg,#000000,#dc2626)}
+        .platform-banner.instagram{background:linear-gradient(135deg,#f59e0b,#ec4899,#8b5cf6)}
+        .platform-banner.twitter{background:linear-gradient(135deg,#171717,#27272a)}
+        .platform-banner.tiktok{background:linear-gradient(135deg,#000000,#ff0050,#00f2ea)}
+        .platform-banner.facebook{background:linear-gradient(135deg,#1877f2,#0d65d9)}
+        .platform-banner.linkedin{background:linear-gradient(135deg,#0077b5,#005885)}
+        .platform-banner.reddit{background:linear-gradient(135deg,#ff4500,#ff6b3d)}
+        .platform-banner.pinterest{background:linear-gradient(135deg,#e60023,#ff4757)}
+        .platform-banner.blog{background:linear-gradient(135deg,#10b981,#34d399)}
+        
+        .platform-banner i{font-size:4rem;color:#fff;margin-bottom:.5rem}
+        .platform-banner span{display:block;font-size:1.1rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.9)}
+        
+        /* Embeds */
+        .embed-container{position:relative;width:100%;padding:1.5rem 1.5rem 0}
+        .embed-container iframe{width:100%;aspect-ratio:16/9;border-radius:12px;border:none}
+        
+        /* Card Body */
+        .card-body{padding:2rem}
+        
+        /* Platform Badge */
+        .platform-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1rem;background:rgba(225,29,72,.15);border:1px solid rgba(225,29,72,.3);border-radius:50px;font-size:.8rem;font-weight:600;text-transform:uppercase;margin-bottom:1rem;color:var(--primary-light)}
+        
+        /* Title */
+        .card-title{font-size:1.75rem;font-weight:700;margin-bottom:1rem;line-height:1.3;font-family:'Syne',sans-serif}
+        .card-title a{color:var(--text);text-decoration:none}
+        .card-title a:hover{color:var(--primary)}
+        
+        /* Meta */
+        .card-meta{color:var(--text-muted);font-size:.9rem;margin-bottom:1.5rem;display:flex;flex-wrap:wrap;gap:1rem}
+        .card-meta span{display:flex;align-items:center;gap:.4rem}
+        
+        /* AI Summary */
+        .ai-summary{background:linear-gradient(135deg,rgba(225,29,72,.08),rgba(225,29,72,.02));border:1px solid rgba(225,29,72,.2);border-radius:12px;padding:1.25rem;margin-bottom:1.5rem}
+        .ai-summary-header{display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;font-weight:600;color:var(--primary);font-size:.9rem}
+        .ai-summary p{color:var(--text);line-height:1.7}
+        
+        /* Caption */
+        .original-caption{background:var(--dark);border-radius:12px;padding:1.25rem;margin-bottom:1.5rem}
+        .original-caption-header{display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;font-weight:600;color:var(--text-muted);font-size:.9rem}
+        .original-caption p{color:var(--text-muted);line-height:1.7;white-space:pre-wrap;font-size:.95rem}
+        
+        /* Category */
+        .card-category{display:inline-block;padding:.35rem .9rem;background:var(--dark);border-radius:50px;font-size:.85rem;color:var(--secondary);margin-right:.5rem;margin-bottom:.5rem;border:1px solid var(--border)}
+        
+        /* Tags */
+        .card-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.5rem}
+        .card-tag{padding:.3rem .7rem;background:rgba(99,102,241,.1);border-radius:6px;font-size:.8rem;color:var(--text-muted)}
+        
+        /* Footer */
+        .card-footer{padding-top:1.5rem;border-top:1px solid var(--border);display:flex;gap:1rem;flex-wrap:wrap}
+        
+        /* Buttons */
+        .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.85rem 1.5rem;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;transition:all .3s;text-decoration:none}
+        .btn-primary{background:var(--primary);color:#fff}
+        .btn-primary:hover{background:var(--primary-dark)}
+        .btn-secondary{background:var(--dark);color:var(--text);border:1px solid var(--border)}
+        .btn-secondary:hover{border-color:var(--primary)}
+        
+        /* Error Toast */
+        .error-toast{position:fixed;top:1.5rem;right:1.5rem;background:#dc2626;color:#fff;padding:1rem 1.5rem;border-radius:10px;font-weight:500;z-index:400;animation:slideIn .3s ease}
+        @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('dashboard') }}" class="navbar-brand"><i class="fas fa-bookmark"></i> Social<span>Saver</span></a>
+        <ul class="navbar-nav">
+            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('discover') }}">Discover</a></li>
+            <li><a href="{{ url_for('stats_page') }}">Stats</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        <a href="{{ url_for('dashboard') }}" class="back-link"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        
+        <div class="card">
+            <div class="card-media">
+                {% if content.image_url %}
+                <img src="{{ content.image_url }}" alt="{{ content.title }}" class="card-img" onerror="this.style.display='none';document.getElementById('ph').style.display='flex'">
+                {% endif %}
+                <div id="ph" class="card-placeholder" {% if content.image_url %}style="display:none"{% endif %}>
+                    <i class="fas fa-link"></i>
+                </div>
+            </div>
+            
+            {# Platform-specific embeds #}
+            {% if content.platform == 'youtube' %}
+                {% set video_id = '' %}
+                {% if 'youtube.com/watch?v=' in content.url %}
+                    {% set vid = content.url.split('v=')[1].split('&')[0] %}
+                    {% set video_id = vid %}
+                {% elif 'youtu.be/' in content.url %}
+                    {% set vid = content.url.split('youtu.be/')[1].split('?')[0] %}
+                    {% set video_id = vid %}
+                {% endif %}
+                {% if video_id %}
+                <div class="embed-container">
+                    <iframe width="100%" style="aspect-ratio:16/9; border:none; border-radius:12px" src="https://www.youtube.com/embed/{{ video_id }}" allowfullscreen></iframe>
+                </div>
+                {% endif %}
+            
+            {% elif content.platform == 'instagram' %}
+                <div class="platform-banner instagram">
+                    <i class="fab fa-instagram"></i>
+                    <span>Instagram</span>
+                </div>
+                <div style="padding:1.5rem">
+                    <blockquote class="instagram-media" data-instgrm-permalink="{{ content.url }}"></blockquote>
+                    <script async src="//www.instagram.com/embed.js"></script>
+                </div>
+            
+            {% elif content.platform == 'twitter' %}
+                <div class="platform-banner twitter">
+                    <span style="font-size:3rem;font-weight:800;font-family:'Syne',sans-serif">X</span>
+                </div>
+                <div style="padding:1.5rem">
+                    <blockquote class="twitter-tweet" data-theme="dark">
+                        <a href="{{ content.url }}"></a>
+                    </blockquote>
+                    <script async src="https://platform.twitter.com/widgets.js"></script>
+                </div>
+            
+            {% elif content.platform == 'reddit' %}
+                <div class="platform-banner reddit">
+                    <i class="fab fa-reddit"></i>
+                    <span>Reddit</span>
+                </div>
+                <div style="padding:1.5rem">
+                    <blockquote class="reddit-embed-bq">
+                        <a href="{{ content.url }}">{{ content.title }}</a>
+                    </blockquote>
+                    <script async src="https://embed.reddit.com/widgets.js"></script>
+                </div>
+            
+            {% elif content.platform == 'tiktok' %}
+                <div class="platform-banner tiktok">
+                    <i class="fab fa-tiktok"></i>
+                    <span>TikTok</span>
+                </div>
+                <div style="padding:1.5rem">
+                    <blockquote class="tiktok-embed" cite="{{ content.url }}">
+                        <section></section>
+                    </blockquote>
+                    <script async src="https://www.tiktok.com/embed.js"></script>
+                </div>
+            
+            {% elif content.platform in ['blog', 'linkedin', 'facebook', 'pinterest'] %}
+                {% if content.image_url %}
+                <div style="padding:1.5rem 1.5rem 0">
+                    <div style="background:var(--dark);border-radius:12px;overflow:hidden;border:1px solid var(--border);">
+                        <img src="{{ content.image_url }}" alt="{{ content.title }}" style="width:100%;height:200px;object-fit:cover">
+                        <div style="padding:1rem">
+                            <h3 style="font-size:1.1rem;margin-bottom:.5rem">{{ content.title }}</h3>
+                            <p style="color:var(--text-muted);font-size:.9rem">{{ content.summary or content.caption or '' }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endif %}
+            
+            <div class="card-body">
+                <span class="platform-badge"><i class="fas fa-{{ content.platform }}"></i> {{ content.platform }}</span>
+                
+                <h1 class="card-title">
+                    <a href="{{ content.url }}" target="_blank">{{ content.title or 'Untitled' }}</a>
+                </h1>
+                
+                <div class="card-meta">
+                    <span><i class="far fa-clock"></i> Saved: {{ content.timestamp }}</span>
+                    {% if content.user_phone %}
+                    <span><i class="fas fa-phone"></i> {{ content.user_phone }}</span>
+                    {% endif %}
+                </div>
+                
+                {# AI Summary #}
+                {% if content.summary %}
+                <div class="ai-summary">
+                    <div class="ai-summary-header"><i class="fas fa-robot"></i> AI Summary</div>
+                    <p>{{ content.summary }}</p>
+                </div>
+                {% endif %}
+                
+                {# Original Caption #}
+                {% if content.caption %}
+                <div class="original-caption">
+                    <div class="original-caption-header"><i class="fas fa-quote-left"></i> Original Caption</div>
+                    <p>{{ content.caption }}</p>
+                </div>
+                {% endif %}
+                
+                {# Category & Tags #}
+                {% if content.category %}<span class="card-category">{{ content.category }}</span>{% endif %}
+                {% if content.tags %}
+                <div class="card-tags">
+                    {% for tag in content.tags.split(',') %}
+                    <span class="card-tag">{{ tag.strip() }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <div class="card-footer">
+                    <a href="{{ content.url }}" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> View Original</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
