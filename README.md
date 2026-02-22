@@ -6,6 +6,22 @@ Built for Hack the Thread — National Institute of Technology Karnataka (NITK),
 
 The core problem: you save links on WhatsApp and never find them again. Social Saver Bot intercepts that behavior, processes every link through an AI pipeline, and surfaces it in a clean, searchable interface. No new app to install. No new habit to build. You already share links on WhatsApp — just send them to this number instead.
 
+
+
+---
+
+## Demo
+
+Watch the full demo walkthrough on YouTube: [https://youtu.be/i4z8_0sqVwY]
+
+---
+
+## Team
+
+|     Name          |               Email                   |
+|-------------------|---------------------------------------|
+| Shaik  Arshad Ali | shaik2.mitmpl2025@learner.manipal.edu |
+
 ---
 
 ## Problem Statement
@@ -239,21 +255,7 @@ The LLM provider is swappable. `config.py` has config blocks for Groq, Gemini, a
 
 The RAG implementation deliberately avoids vector embeddings. For a personal bookmark system where queries tend to use the same words as the saved content's tags and titles, keyword search is fast and accurate enough. Adding semantic search would require a vector store and an embedding model call per save — more infrastructure for marginal gain at this scale.
 
----
 
-## Demo
-
-Watch the full demo walkthrough on YouTube: [https://youtu.be/i4z8_0sqVwY]
-
----
-
-## Team
-
-|     Name          |               Email                   |
-|-------------------|---------------------------------------|
-| Shaik  Arshad Ali | shaik2.mitmpl2025@learner.manipal.edu |
-
----
 
 ## License
 
