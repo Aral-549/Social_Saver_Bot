@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stats — Social Saver Bot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --primary:#3b82f6;--primary-light:#fb7185;
+            --primary-dark;--secondary:#:#be123c10b981;
+            --dark:#0a0a0a;--card:#171717;
+            --border:#262626;--text:#fafafa;--text-muted:#a3a3a3;
+        }
+        body{font-family:'DM Sans',system-ui,-apple-system,sans-serif;background:var(--dark);color:var(--text);line-height:1.6;min-height:100vh}
+        
+        /* Navbar */
+        .navbar{background:var(--card);padding:1.25rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+        .navbar-brand{display:flex;align-items:center;gap:.75rem;font-size:1.5rem;font-weight:800;font-family:'Syne',sans-serif;text-decoration:none;color:var(--text)}
+        .navbar-brand span{color:var(--primary)}
+        .navbar-nav{display:flex;gap:2rem;list-style:none}
+        .navbar-nav a{color:var(--text-muted);text-decoration:none;transition:color .3s;font-weight:500;font-size:.95rem}
+        .navbar-nav a:hover,.navbar-nav a.active{color:var(--primary)}
+        
+        /* Container */
+        .container{max-width:1400px;margin:0 auto;padding:2.5rem}
+        
+        /* Header */
+        .header{margin-bottom:2.5rem}
+        .header h1{font-size:3rem;font-weight:800;font-family:'Syne',sans-serif;margin-bottom:.5rem}
+        .header h1 em{color:var(--primary);font-style:normal}
+        .header p{color:var(--text-muted);font-size:1.15rem}
+        
+        /* Stats Grid */
+        .stats-grid{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;margin-bottom:2.5rem;display:grid}
+        .stat-card{background:var(--card);border-radius:14px;padding:1.75rem;border:1px solid var(--border)}
+        .stat-card .label{color:var(--text-muted);font-size:.95rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem;font-weight:500}
+        .stat-card .value{font-size:2.5rem;font-weight:800;font-family:'Syne',sans-serif}
+        
+        /* Chart Cards */
+        .chart-card{background:var(--card);border-radius:14px;padding:1.75rem;border:1px solid var(--border);margin-bottom:1.5rem}
+        .chart-card h2{font-size:1.35rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:.75rem;font-family:'Syne',sans-serif;font-weight:700}
+        
+        /* Platform Stats */
+        .platform-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+        .platform-stat{background:var(--dark);border-radius:10px;padding:1.1rem;display:flex;align-items:center;gap:1rem}
+        .platform-stat .icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.35rem;color:#fff}
+        .platform-stat .icon.youtube{background:linear-gradient(135deg,#dc2626,#991b1b)}
+        .platform-stat .icon.instagram{background:linear-gradient(135deg,#f59e0b,#ec4899,#8b5cf6)}
+        .platform-stat .icon.twitter{background:linear-gradient(135deg,#171717,#27272a)}
+        .platform-stat .icon.tiktok{background:linear-gradient(135deg,#010101,#ff0050)}
+        .platform-stat .icon.facebook{background:#1877f2}
+        .platform-stat .icon.linkedin{background:#0077b5}
+        .platform-stat .icon.reddit{background:#ff4500}
+        .platform-stat .icon.blog{background:var(--secondary)}
+        .platform-stat .info .count{font-size:1.6rem;font-weight:800;font-family:'Syne',sans-serif}
+        .platform-stat .info .name{color:var(--text-muted);font-size:.85rem}
+        
+        /* Category Bars */
+        .category-bars{display:flex;flex-direction:column;gap:1rem}
+        .cat-bar{display:flex;align-items:center;gap:1rem}
+        .cat-bar .name{flex:0 0 190px;font-size:.9rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .cat-bar .bar{flex:1;height:32px;background:var(--dark);border-radius:8px;overflow:hidden}
+        .cat-bar .fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--primary-light));border-radius:8px;transition:width .5s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:.85rem;font-size:.85rem;font-weight:700;min-width:45px}
+        .cat-bar .count{flex:0 0 55px;text-align:right;font-weight:700}
+        
+        /* Timeline */
+        .timeline{display:flex;flex-direction:column;gap:0}
+        .timeline-item{position:relative;padding-left:2.25rem;padding-bottom:2rem;border-left:2px solid var(--border)}
+        .timeline-item:last-child{border-left-color:transparent}
+        .timeline-item::before{content:'';position:absolute;left:-7px;top:0;width:12px;height:12px;border-radius:50%;background:var(--primary);border:2px solid var(--dark)}
+        .timeline-item .date{font-weight:700;color:var(--primary);margin-bottom:.35rem;font-size:.95rem}
+        .timeline-item .content{background:var(--dark);border-radius:10px;padding:1.1rem}
+        .timeline-item .title{font-weight:700;margin-bottom:.35rem;font-size:1rem}
+        .timeline-item .desc{color:var(--text-muted);font-size:.9rem}
+        
+        /* Back Button */
+        .back-link{display:inline-flex;align-items:center;gap:.5rem;color:var(--text-muted);text-decoration:none;margin-bottom:1.5rem;font-size:.95rem}
+        .back-link:hover{color:var(--primary)}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('dashboard') }}" class="navbar-brand"><i class="fas fa-bookmark"></i> Social<span>Saver</span></a>
+        <ul class="navbar-nav">
+            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('discover') }}">Discover</a></li>
+            <li><a href="{{ url_for('stats_page') }}" class="active">Stats</a></li>
+            <li><a href="{{ url_for('collections_page') }}">Collections</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <a href="{{ url_for('dashboard') }}" class="back-link"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        
+        <div class="header">
+            <h1>Your <em>stats</em></h1>
+            <p>Insights into your saved content</p>
+        </div>
+
+        <!-- Top Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label"><i class="fas fa-bookmark"></i> Total Saved</div>
+                <div class="value" style="color:var(--primary)">{{ stats.total }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="label"><i class="fas fa-calendar-week"></i> This Week</div>
+                <div class="value" style="color:var(--secondary)">{{ stats.recent_7_days }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="label"><i class="fas fa-folder"></i> Categories</div>
+                <div class="value" style="color:#f59e0b">{{ stats.by_category|length }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="label"><i class="fas fa-users"></i> Users</div>
+                <div class="value" style="color:#8b5cf6">{{ stats.unique_users }}</div>
+            </div>
+        </div>
+
+        <!-- Platform Distribution -->
+        <div class="chart-card">
+            <h2><i class="fas fa-share-alt"></i> By Platform</h2>
+            <div class="platform-stats">
+                {% for p, count in stats.by_platform.items()|sort(attribute='1', reverse=True) %}
+                <div class="platform-stat">
+                    <div class="icon {{ p }}">
+                        {% if p == 'youtube' %}<i class="fab fa-youtube"></i>
+                        {% elif p == 'instagram' %}<i class="fab fa-instagram"></i>
+                        {% elif p == 'twitter' %}<i class="fab fa-twitter"></i>
+                        {% elif p == 'tiktok' %}<i class="fab fa-tiktok"></i>
+                        {% elif p == 'facebook' %}<i class="fab fa-facebook"></i>
+                        {% elif p == 'linkedin' %}<i class="fab fa-linkedin"></i>
+                        {% elif p == 'reddit' %}<i class="fab fa-reddit"></i>
+                        {% else %}<i class="fas fa-globe"></i>{% endif %}
+                    </div>
+                    <div class="info">
+                        <div class="count">{{ count }}</div>
+                        <div class="name">{{ p|title }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Category Distribution -->
+        <div class="chart-card">
+            <h2><i class="fas fa-tags"></i> By Category</h2>
+            <div class="category-bars">
+                {% set max_count = stats.by_category.values()|max|default(1) %}
+                {% set sorted_cats = stats.by_category.items()|sort(attribute='1', reverse=True) %}
+                {% for cat, count in sorted_cats[:10] %}
+                <div class="cat-bar">
+                    <div class="name" title="{{ cat }}">{{ cat }}</div>
+                    <div class="bar"><div class="fill" style="width:{{ (count / max_count * 100)|int }}%">{{ count }}</div></div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="chart-card">
+            <h2><i class="fas fa-history"></i> Recent Activity</h2>
+            <div class="timeline">
+                {% for item in recent %}
+                <div class="timeline-item">
+                    <div class="date">{{ item.timestamp[:10] }}</div>
+                    <div class="content">
+                        <div class="title">{{ item.title or 'Untitled' }}</div>
+                        <div class="desc">{{ item.category }} • {{ item.platform|title }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Activity Heatmap -->
+        <div class="chart-card" style="margin-top:1.5rem">
+            <h2><i class="fas fa-calendar-check"></i> Save Activity — Last 12 Months</h2>
+            <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem">Each square = 1 day</p>
+            <div id="heatmap" style="overflow-x:auto;padding-bottom:.5rem"></div>
+            <div style="display:flex;align-items:center;gap:.5rem;margin-top:.75rem;font-size:.75rem;color:var(--text-muted)">
+                Less
+                <span style="width:12px;height:12px;border-radius:2px;background:#1a2535;display:inline-block"></span>
+                <span style="width:12px;height:12px;border-radius:2px;background:#1e3a5f;display:inline-block"></span>
+                <span style="width:12px;height:12px;border-radius:2px;background:#1d4ed8;display:inline-block"></span>
+                <span style="width:12px;height:12px;border-radius:2px;background:#3b82f6;display:inline-block"></span>
+                <span style="width:12px;height:12px;border-radius:2px;background:#93c5fd;display:inline-block"></span>
+                More
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        const rawData = {{ heatmap_data | safe }};
+        const container = document.getElementById('heatmap');
+        
+        const today = new Date();
+        const days = [];
+        for (let i = 364; i >= 0; i--) {
+            const d = new Date(today);
+            d.setDate(d.getDate() - i);
+            const key = d.toISOString().split('T')[0];
+            days.push({ date: key, count: rawData[key] || 0, day: d.getDay() });
+        }
+
+        function getColor(count) {
+            if (count === 0) return '#1a2535';
+            if (count === 1) return '#1e3a5f';
+            if (count <= 3) return '#1d4ed8';
+            if (count <= 6) return '#3b82f6';
+            return '#93c5fd';
+        }
+
+        const weeks = [];
+        let week = [];
+        for (let p = 0; p < days[0].day; p++) week.push(null);
+        days.forEach(d => {
+            week.push(d);
+            if (week.length === 7) { weeks.push(week); week = []; }
+        });
+        if (week.length) weeks.push(week);
+
+        const monthLabels = document.createElement('div');
+        monthLabels.style.display = 'flex';
+        monthLabels.style.gap = '3px';
+        monthLabels.style.marginBottom = '4px';
+        const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        let lastMonth = -1;
+        weeks.forEach(w => {
+            const lbl = document.createElement('div');
+            lbl.style.fontSize = '.65rem';
+            lbl.style.color = 'var(--text-muted)';
+            lbl.style.width = '13px';
+            lbl.style.whiteSpace = 'nowrap';
+            const firstReal = w.find(Boolean);
+            if (firstReal) {
+                const m = new Date(firstReal.date).getMonth();
+                if (m !== lastMonth) { lbl.textContent = MONTHS[m]; lastMonth = m; }
+            }
+            monthLabels.appendChild(lbl);
+        });
+        container.appendChild(monthLabels);
+
+        const grid = document.createElement('div');
+        grid.style.display = 'flex';
+        grid.style.gap = '3px';
+        weeks.forEach(w => {
+            const col = document.createElement('div');
+            col.style.display = 'flex';
+            col.style.flexDirection = 'column';
+            col.style.gap = '3px';
+            w.forEach(d => {
+                const cell = document.createElement('div');
+                cell.style.width = '13px';
+                cell.style.height = '13px';
+                cell.style.borderRadius = '2px';
+                if (d) {
+                    cell.style.background = getColor(d.count);
+                    cell.style.cursor = 'default';
+                    cell.style.title = d.date + ': ' + d.count + ' save' + (d.count !== 1 ? 's' : '');
+                } else {
+                    cell.style.background = 'transparent';
+                }
+                col.appendChild(cell);
+            });
+            grid.appendChild(col);
+        });
+        container.appendChild(grid);
+    })();
+    </script>
+</body>
+</html>
